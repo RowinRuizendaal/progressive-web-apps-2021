@@ -3,9 +3,8 @@ const router = express.Router();
 const bodyParser = require('body-parser');
 
 router.use(bodyParser.urlencoded({
-    extended: true,
-  }));
-
+  extended: true,
+}));
 // Pages required
 const homepage = require('./src/index');
 const carousel = require('./src/carousel');
