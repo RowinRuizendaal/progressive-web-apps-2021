@@ -3,8 +3,10 @@ const router = express.Router();
 const axios = require('axios');
 
 
-router.get('/artist/:name', (req, res) => {
+router.get('/artist/:name', async (req, res) => {
   const name = req.params.name;
+  const data = [];
+  let json;
 
   if (typeof localStorage === 'undefined' || localStorage === null) {
     const LocalStorage = require('node-localstorage').LocalStorage;
@@ -27,15 +29,27 @@ router.get('/artist/:name', (req, res) => {
     },
   };
 
-  axios.request(options).then(function(response) {
-    console.log(response.data);
-    res.render('carousel.ejs', {
-      data: response.data.data,
-    });
-    localStorage.setItem(name, JSON.stringify(response.data.data));
+  json = await axios.request(options).then(function(response) {
+    data.push(response.data);
+    return response.data;
   }).catch(function(error) {
     console.error(error);
   });
+
+  // if there is a error provide feedback
+  if (json.error) {
+    console.log('error');
+    return res.redirect('/');
+  }
+
+  // If json is sucessfully fetched
+  if (json && !json.error) {
+    console.log(data[0].data);
+    res.render('carousel.ejs', {
+      data: data[0].data,
+    });
+    return localStorage.setItem(name, JSON.stringify(data[0].data));
+  }
 });
 
 
