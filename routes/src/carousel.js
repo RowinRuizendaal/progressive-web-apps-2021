@@ -6,16 +6,16 @@ const axios = require('axios');
 router.get('/artist/:name', (req, res) => {
   const name = req.params.name;
 
-  if (typeof localStorage === "undefined" || localStorage === null) {
-    var LocalStorage = require('node-localstorage').LocalStorage;
+  if (typeof localStorage === 'undefined' || localStorage === null) {
+    const LocalStorage = require('node-localstorage').LocalStorage;
     localStorage = new LocalStorage('./scratch');
   }
 
-  
+
   if (localStorage.getItem(name)) {
     return res.render('carousel.ejs', {
-        data: JSON.parse(localStorage.getItem(name))
-    })
+      data: JSON.parse(localStorage.getItem(name)),
+    });
   }
 
   const options = {

@@ -9,6 +9,7 @@
     </div>
     <div class="container margin">
         <% data.forEach(function(data) { %>
+        <% if (data.name != null || data.name != undefined) { %>
             <article class="container">
                 <a href="/artist/<%= data.name %>#overview">
                     <div class="box">
@@ -27,6 +28,7 @@
                         </div>
                 </a>
             </article>
+            <% } %>
             <% }) %>
                 </div>
 </section>
