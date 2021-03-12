@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const axios = require('axios');
+const api = require('../../modules/api');
+const utils = require('../../modules/utils');
 
 
 const data = [];
@@ -19,24 +20,17 @@ router.get('/', async (req, res) => {
     });
   }
 
-
   for (let i = 0; i < 7; i++) {
-    const options = {
-      method: 'GET',
-      url: `https://deezerdevs-deezer.p.rapidapi.com/artist/${i}`,
-      headers: {
-        'x-rapidapi-key': process.env.KEY,
-        'x-rapidapi-host': process.env.HOST,
-      },
-    };
+    json = await api.fetchData(`artist/${i}`);
 
-    json = await axios.request(options).then(function(response) {
-      data.push(response.data);
-      return response.data;
-    }).catch(function(error) {
-      console.error(error);
-    });
-  }
+    if (typeof json === 'object') {
+      data.push(json);
+    } else {
+      data = await json.map((el) => {
+        return el;
+      });
+    }
+  };
 
 
   if (json.error) {
@@ -55,6 +49,7 @@ router.get('/', async (req, res) => {
   }
 });
 
+
 router.post('/app', async (req, res) => {
   const postvalue = req.body.value;
 
@@ -65,43 +60,27 @@ router.post('/app', async (req, res) => {
     });
   }
 
-  const options = {
-    method: 'GET',
-    url: `https://deezerdevs-deezer.p.rapidapi.com/search?q=${postvalue}`,
-    headers: {
-      'x-rapidapi-key': process.env.KEY,
-      'x-rapidapi-host': process.env.HOST,
-    },
-  };
-
-  json = await axios.request(options).then(function(response) {
-    data.push(response.data);
-    return response.data;
-  }).catch(function(error) {
-    console.error(error);
-  });
-
+  json = await api.fetchData(`search?q=${postvalue}`);
 
   if (json.error) {
-    // console.log('error', data);
     return res.render('index.ejs', {
       data: JSON.parse(localStorage.getItem('index')),
       rerender: false,
     });
   }
 
+  json.data.map((el) => {
+    return el;
+  });
+
+  const formatStructure = utils.formatData(json.data);
+  const uniqueArray = utils.filterArray(formatStructure);
+
   if (json && !json.error) {
-    const leeg = [];
-
-    data.map((el) => {
-      if (!el.error) {
-        leeg.push(el);
-      }
-    });
-
+    localStorage.setItem('index', JSON.stringify(uniqueArray));
     return res.render('index.ejs', {
-      data: leeg[0].data,
-      rerender: true,
+      data: uniqueArray,
+      rerender: false,
     });
   }
 });

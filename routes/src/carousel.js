@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const axios = require('axios');
+const api = require('../../modules/api');
 
+
+let json;
 
 router.get('/artist/:name', async (req, res) => {
   const name = req.params.name;
-  const data = [];
-  let json;
 
   if (typeof localStorage === 'undefined' || localStorage === null) {
     const LocalStorage = require('node-localstorage').LocalStorage;
@@ -20,35 +20,22 @@ router.get('/artist/:name', async (req, res) => {
     });
   }
 
-  const options = {
-    method: 'GET',
-    url: `https://deezerdevs-deezer.p.rapidapi.com/search?q=${name}`,
-    headers: {
-      'x-rapidapi-key': process.env.KEY,
-      'x-rapidapi-host': process.env.HOST,
-    },
-  };
+  json = await api.fetchData(`search?q=${name}`);
 
-  json = await axios.request(options).then(function(response) {
-    data.push(response.data);
-    return response.data;
-  }).catch(function(error) {
-    console.error(error);
-  });
-
-  // if there is a error provide feedback
   if (json.error) {
     console.log('error');
     return res.redirect('/');
   }
 
-  // If json is sucessfully fetched
-  if (json && !json.error) {
-    console.log(data[0].data);
-    res.render('carousel.ejs', {
-      data: data[0].data,
+  dataset = json.data.map((el) => {
+    return el;
+  });
+
+  if (json) {
+    localStorage.setItem(name, JSON.stringify(dataset));
+    return res.render('carousel.ejs', {
+      data: dataset,
     });
-    return localStorage.setItem(name, JSON.stringify(data[0].data));
   }
 });
 
