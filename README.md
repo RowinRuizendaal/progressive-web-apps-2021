@@ -1,54 +1,138 @@
-# Progressive Web Apps @cmda-minor-web · 20-21
-
-In this course we will convert the client side web application previously made Web App From Scratch into a server side rendered application. We also add functionalities based on the Service Worker and turn the application into a Progressive Web App. Ultimately we are going to implement a series of optimisations to improve the performance of the application.  
-
-## Learning goals
-- _You understand the difference between client side and server side rendering and you can apply server side rendering
-in your application_
-- _You understand how a Service Worker works and you can implement it in your application._
-- _You understand how the critical render path works and how you can optimize it for a better runtime and / or perceived performance._
-
-[Rubric with learning goals](https://icthva.sharepoint.com/:x:/r/sites/FDMCI_EDU__CMD20_21_Minor_Web_5i7j73jt/_layouts/15/Doc.aspx?sourcedoc=%7B276F53A7-2531-4006-8AD2-08C9A82D3A11%7D&file=PWA%202021%20Rubric.xlsx&action=edit&mobileredirect=true&wdPreviousSession=92686bea-446f-40e3-9303-33fa3f832b82&wdOrigin=TEAMS-ELECTRON.teams.undefined)
-
-## Program
-
-### Week 1 - Server Side Rendering 📡
-
-Goal: Render web pages server side
-
-[Exercises](https://github.com/cmda-minor-web/progressive-web-apps-2021/blob/master/course/week-1.md)    
-[Server Side Rendering - slides Declan Rek](https://github.com/cmda-minor-web/progressive-web-apps-1920/blob/master/course/cmd-2021-server-side-rendering.pdf)  
+# Single page app - Check out your favorite songs from your favorite Artist!
 
 
-### Week 2 - Progressive Web App 🚀
+![image](https://raw.githubusercontent.com/RowinRuizendaal/web-app-from-scratch-2021/master/assets/documentation/home.jpg)
 
-Goals: Convert application to a Progressive Web App
-
-[Exercises](https://github.com/cmda-minor-web/progressive-web-apps-2021/blob/master/course/week-2.md)  
-[Progressive Web Apps - slides Declan Rek](https://github.com/cmda-minor-web/progressive-web-apps-1920/blob/master/course/cmd-2020-progressive-web-apps.pdf)
+![image](https://raw.githubusercontent.com/RowinRuizendaal/web-app-from-scratch-2021/master/assets/documentation/teaser.png)
 
 
-### Week 3 - Critical Rendering Path 📉 
-
-Doel: Optimize the Critical Rendering Path   
-[Exercises](https://github.com/cmda-minor-web/progressive-web-apps-2021/blob/master/course/week-3.md)  
-[Critical Rendering Path - slides Declan Rek](https://github.com/cmda-minor-web/progressive-web-apps-1920/blob/master/course/cmd-2020-critical-rendering-path.pdf)
+[Live demo](https://rowinruizendaal.github.io/web-app-from-scratch-2021/)
 
 
-<!-- Add a link to your live demo in Github Pages 🌐-->
+## Description
 
-<!-- ☝️ replace this description with a description of your own work -->
+I made a single page app for music lovers in which I used the Rapid API (Deezer) API, this allows me to take a look at the current songs of an artist. 
 
-<!-- Add a nice image here at the end of the week, showing off your shiny frontend 📸 -->
 
-<!-- Maybe a table of contents here? 📚 -->
+## What can you do with this web app?
 
-<!-- How about a section that describes how to install this project? 🤓 -->
+Ever had that moment where you like a song of any artist but you dont know any other songs from that artist? With this tool you can search on any artist and view all their music previews within just a 2 steps.
 
-<!-- ...but how does one use this project? What are its features 🤔 -->
+Fill in their artist name,
 
-<!-- What external data source is featured in your project and what are its properties 🌠 -->
+Click on the desired artist
 
-<!-- Maybe a checklist of done stuff and stuff still on your wishlist? ✅ -->
+All their songs are within one simple overview carousel
 
-<!-- How about a license here? 📜 (or is it a licence?) 🤷 -->
+
+
+## What does this app need to be a perfect app from now on?
+
+Like feature to save any songs from your favorite artist,
+
+Better API connection with limitless calls
+
+
+
+
+## Actor diagram 
+
+![actor](https://raw.githubusercontent.com/RowinRuizendaal/web-app-from-scratch-2021/master/assets/documentation/Actor.png)
+
+## Interaction diagram
+
+![actor](https://raw.githubusercontent.com/RowinRuizendaal/web-app-from-scratch-2021/master/assets/documentation/Interaction-diagram.png)
+
+
+## Data transform
+
+[Genre.js](https://github.com/RowinRuizendaal/web-app-from-scratch-2021/blob/master/js/modules/genre/genre.js#L48-L49)
+
+```js
+import { formatData } from '../utils/formatData.js'
+import { filterArray } from '../utils/FilterArray.js'
+
+
+const formatStructure = formatData(json.data)
+const uniqueArray = filterArray(formatStructure)
+
+```
+
+[FormatData.js](https://github.com/RowinRuizendaal/web-app-from-scratch-2021/blob/master/js/modules/utils/formatData.js)
+```js
+export function formatData(array) {
+
+    return array.map((el) => {
+        return {
+            id: el.artist.id,
+            name: el.artist.name,
+            picture_medium: el.artist.picture_medium,
+            type: el.type
+        }
+    })
+}
+```
+
+[FilterArray.js](https://github.com/RowinRuizendaal/web-app-from-scratch-2021/blob/master/js/modules/utils/FilterArray.js)
+
+
+```js
+export function filterArray(array) {
+
+    const unique = array.reduce((acc, current) => {
+        const x = acc.find(item => item.id === current.id);
+        if (!x) {
+            return acc.concat([current]);
+        } else {
+            return acc;
+        }
+    }, []);
+    return unique
+}
+```
+
+
+## What is the Rapid deezer API?
+
+What is an API? Application programming interfaces (APIs) helps to make data available for extern users. In this way, you can request data to use it in different applications.
+
+[The Rapid Deezer API](https://rapidapi.com/deezerdevs/api/deezer-1):
+
+    - Search on artist
+    - Search on album.
+    - Get comments
+    - Get Genre
+    - Get Artist
+    - Get Ediorial
+    - Get Playlist
+    - Get Track
+    - Get Radio
+    - Get Infos
+
+## How many request are allowed?
+
+I couldn't find any information about the maxium request each hour/day, the API will timeout for some times if the api is getting called to many times, these timeout are not rate limits since you are able to fetch data within seconds after it.
+
+
+## How to fetch data from the Rapid Deezer API?
+
+```js
+import { config } from './config.js'
+
+//Fetch method
+export async function fetchData(endpoint1) {
+    const endpoint = endpoint1
+
+    const dataset = await fetch(`${config.baseUrl}${endpoint}`, {
+        "method": "GET",
+        "headers": {
+            "x-rapidapi-key": `${config.key}`,
+            "x-rapidapi-host": `${config.host}`
+        }
+    })
+    const json = await dataset.json()
+    return json
+}
+
+
+```
