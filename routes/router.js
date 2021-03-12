@@ -6,9 +6,6 @@ router.use(bodyParser.urlencoded({
   extended: true,
 }));
 
-router.use(bodyParser.urlencoded({
-  extended: true,
-}));
 // Pages required
 const homepage = require('./src/index');
 const carousel = require('./src/carousel');
