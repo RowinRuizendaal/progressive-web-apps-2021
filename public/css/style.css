@@ -693,3 +693,34 @@ footer div a {
         fill: white
     }
 }
+
+.offline {
+    min-height: 100vh;
+    background-color: var(--backgroundColor);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: var(--wit);
+}
+
+.offline .info {
+    margin-top: 2rem;
+    background-color: var(--roze);
+    padding: 0.8rem 1rem;
+    border-radius: 0.5rem;
+    color: white;
+    opacity: 0.9;
+}
+
+.offline .info::before {
+    content: 'i';
+    color: white;
+    background-color: var(--roze);
+    display: inline-block;
+    text-align: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 1.5rem;
+    margin-right: 0.5rem;
+}
