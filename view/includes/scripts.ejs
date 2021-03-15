@@ -1,9 +1,9 @@
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js" defer></script>
 <script>
     if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
+        window.addEventListener('load', () => {
             navigator.serviceWorker.register('../service-worker.js')
-                .then(function(registration) {
+                .then((registration) => {
                     return registration.update();
                 })
         });
