@@ -1,0 +1,8 @@
+{
+    "short_name": "Deezer API music",
+    "name": "Search on any artist of your choice",
+    "start_url": "/",
+    "display": "standalone",
+    "scope": "/",
+    "description": "Search on any musicans"
+}

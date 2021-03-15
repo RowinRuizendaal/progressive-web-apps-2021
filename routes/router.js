@@ -9,10 +9,12 @@ router.use(bodyParser.urlencoded({
 // Pages required
 const homepage = require('./src/index');
 const carousel = require('./src/carousel');
+const offline = require('./src/offline');
 
 // Make routes
 router.use('/', homepage);
 router.use('/', carousel);
+router.use('/', offline);
 
 
 module.exports = router;
