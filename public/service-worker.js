@@ -7,13 +7,15 @@ const urlsToCache = [
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-      caches.open(CORE_CACHE_VERSION).then(function(cache) {
-        return cache.addAll(urlsToCache).then(() => self.skipWaiting());
+      caches.open(CORE_CACHE_VERSION).then(async (cache) =>{
+        await cache.addAll(urlsToCache);
+        return self.skipWaiting();
       }),
   );
 });
 
 self.addEventListener('activate', (event) => {
+  console.log('Active');
   event.waitUntil(clients.claim());
 });
 
@@ -24,41 +26,40 @@ self.addEventListener('fetch', (event) => {
         caches.open(CORE_CACHE_VERSION)
             .then((cache) => cache.match(event.request))
             .then((response) => response ? response : FetchAndCache(event.request, CORE_CACHE_VERSION))
-            .catch(() => {
-              return caches.open(CORE_CACHE_VERSION)
-                  .then((cache) => cache.match('/offline'));
+            .catch(async () => {
+              const cache = await caches.open(CORE_CACHE_VERSION);
+              return await cache.match('/offline');
             }));
-  } 
-  
+  }
+
   if (isCssGetRequest(event.request)) {
     event.respondWith(
         fetch(event.request)
-            .catch(() => {
-              return caches.open(CORE_CACHE_VERSION)
-                  .then((cache) => cache.match('/css/style.css'));
+            .catch(async () => {
+              const cache = await caches.open(CORE_CACHE_VERSION);
+              return await cache.match('/css/style.css');
             }),
     );
   }
 });
 
 
-const FetchAndCache = (request, cacheName) => {
-  return fetch(request)
-      .then((response) => {
-        const clone = response.clone();
-        caches.open(cacheName)
-            .then((cache) => {
-              cache.put(request, clone);
-            });
-        return response;
+const FetchAndCache = async (request, cacheName) => {
+  const response = await fetch(request);
+  const clone = response.clone();
+  caches.open(cacheName)
+      .then((cache) => {
+        cache.put(request, clone);
       });
+  return response;
 };
 
 const isHtmlGetRequest = (request) => {
-  return request.method === 'GET' && request.headers.get('accept').indexOf('text/html') !== -1;
+  return request.method === 'GET' && request.destination === 'document';
 };
 
 
 const isCssGetRequest = (request) => {
-  return request.method === 'GET' && request.headers.get('accept').indexOf('text/css') !== -1;
+  console.log(request.destination);
+  return request.method === 'GET' && request.destination === 'style';
 };
