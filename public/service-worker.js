@@ -2,12 +2,15 @@ const CORE_CACHE_VERSION = 'v3';
 const urlsToCache = [
   '/offline',
   '/css/style.css',
+  '/css/swiper-bundle.css',
+  '/swiper.js',
+  '/swiper-interaction.js',
 ];
 
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-      caches.open(CORE_CACHE_VERSION).then(async (cache) =>{
+      caches.open(CORE_CACHE_VERSION).then(async (cache) => {
         await cache.addAll(urlsToCache);
         return self.skipWaiting();
       }),
@@ -32,12 +35,33 @@ self.addEventListener('fetch', (event) => {
             }));
   }
 
+  if (isAudioGetRequest(event.request)) {
+    event.respondWith(
+        caches.open(CORE_CACHE_VERSION)
+            .then((cache) => cache.match(event.request))
+            .then((response) => response ? response : FetchAndCache(event.request, CORE_CACHE_VERSION))
+            .catch(async () => {
+              const cache = await caches.open(CORE_CACHE_VERSION);
+              return await cache.match(event.request);
+            }));
+  }
+
   if (isCssGetRequest(event.request)) {
     event.respondWith(
         fetch(event.request)
             .catch(async () => {
               const cache = await caches.open(CORE_CACHE_VERSION);
-              return await cache.match('/css/style.css');
+              return await cache.match(event.request);
+            }),
+    );
+  }
+
+  if (isScriptGetRequest(event.request)) {
+    event.respondWith(
+        fetch(event.request)
+            .catch(async () => {
+              const cache = await caches.open(CORE_CACHE_VERSION);
+              return await cache.match(event.request);
             }),
     );
   }
@@ -55,11 +79,19 @@ const FetchAndCache = async (request, cacheName) => {
 };
 
 const isHtmlGetRequest = (request) => {
+  console.log(request);
   return request.method === 'GET' && request.destination === 'document';
 };
 
 
 const isCssGetRequest = (request) => {
-  console.log(request.destination);
   return request.method === 'GET' && request.destination === 'style';
+};
+
+const isScriptGetRequest = (request) => {
+  return request.method === 'GET' && request.destination === 'script';
+};
+
+const isAudioGetRequest = (request) => {
+  return request.method === 'GET' && request.destination === 'audio';
 };
