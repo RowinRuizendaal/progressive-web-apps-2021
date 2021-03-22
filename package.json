@@ -11,19 +11,23 @@
     "author": "Rowin Ruizendaal",
     "license": "MIT",
     "dependencies": {
+        "@rollup/plugin-commonjs": "^17.1.0",
         "axios": "^0.21.1",
         "body-parser": "^1.19.0",
+        "clean-css": "^5.1.2",
         "compression": "^1.7.4",
         "dotenv": "^8.2.0",
         "ejs": "^3.1.6",
         "express": "^4.17.1",
         "express-router": "^0.0.1",
+        "fs": "0.0.1-security",
         "node-localstorage": "^2.1.6",
-        "@rollup/plugin-commonjs": "^17.1.0",
         "rollup": "^2.41.2",
         "rollup-plugin-copy": "^3.4.0",
         "rollup-plugin-delete": "^2.0.0",
-        "rollup-plugin-uglify": "^6.0.4"
+        "rollup-plugin-purgecss": "^4.0.3",
+        "rollup-plugin-uglify": "^6.0.4",
+        "uglify-js": "^3.13.2"
     },
     "devDependencies": {
         "eslint": "^7.21.0",
