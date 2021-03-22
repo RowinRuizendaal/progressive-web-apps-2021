@@ -35,16 +35,6 @@ self.addEventListener('fetch', (event) => {
             }));
   }
 
-  if (isAudioGetRequest(event.request)) {
-    event.respondWith(
-        caches.open(CORE_CACHE_VERSION)
-            .then((cache) => cache.match(event.request))
-            .then((response) => response ? response : FetchAndCache(event.request, CORE_CACHE_VERSION))
-            .catch(async () => {
-              const cache = await caches.open(CORE_CACHE_VERSION);
-              return await cache.match(event.request);
-            }));
-  }
 
   if (isCssGetRequest(event.request)) {
     event.respondWith(
@@ -79,7 +69,6 @@ const FetchAndCache = async (request, cacheName) => {
 };
 
 const isHtmlGetRequest = (request) => {
-  console.log(request);
   return request.method === 'GET' && request.destination === 'document';
 };
 
@@ -90,8 +79,4 @@ const isCssGetRequest = (request) => {
 
 const isScriptGetRequest = (request) => {
   return request.method === 'GET' && request.destination === 'script';
-};
-
-const isAudioGetRequest = (request) => {
-  return request.method === 'GET' && request.destination === 'audio';
 };

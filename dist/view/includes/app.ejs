@@ -1,0 +1,57 @@
+<section class="app" id="overview">
+    <div class="absolutediv">
+        <h2 class="overview-header">Featured artists</h2>
+        <form action="/app" method="POST">
+            <label for="">
+                <input type="text" placeholder="Search on any artist of your choice" name="value">
+            </label>
+        </form>
+    </div>
+    <div class="container margin">
+        <%if (rerender) { %>
+            <% data.forEach(function(data) { %>
+                <article class="container">
+                    <a href="/artist/<%= data.artist.name %>#overview">
+                        <div class="box">
+                            <div class="imgBx">
+                                <img src="<%= data.artist.picture_medium %>">
+                            </div>
+                            <div class="content">
+                                <div>
+                                    <h2>
+                                        <%= data.artist.name %>
+                                    </h2>
+                                    <p>
+                                        <%= data.artist.type %>
+                                    </p>
+                                </div>
+                            </div>
+                    </a>
+                </article>
+                <% }) %>
+                    <% } else{ %>
+                        <% data.forEach(function(data) { %>
+                            <% if (data.name != null || data.name != undefined) { %>
+                                <article class="container">
+                                    <a href="/artist/<%= data.name %>#overview">
+                                        <div class="box">
+                                            <div class="imgBx">
+                                                <img src="<%= data.picture_medium %>">
+                                            </div>
+                                            <div class="content">
+                                                <div>
+                                                    <h2>
+                                                        <%= data.name %>
+                                                    </h2>
+                                                    <p>
+                                                        <%= data.type %>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                    </a>
+                                </article>
+                                <% } %>
+                                    <% }) %>
+                                        <% } %>
+                                            </div>
+</section>

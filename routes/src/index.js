@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const api = require('../../modules/api');
 const utils = require('../../modules/utils');
+let useStorage = '';
 
 
 const data = [];
@@ -9,13 +10,13 @@ let json;
 
 if (typeof localStorage === 'undefined' || localStorage === null) {
   const LocalStorage = require('node-localstorage').LocalStorage;
-  localStorage = new LocalStorage('./scratch');
+  useStorage = new LocalStorage('./scratch');
 }
 
 router.get('/', async (req, res) => {
-  if (localStorage.getItem('index')) {
+  if (useStorage.getItem('index')) {
     return res.render('index.ejs', {
-      data: JSON.parse(localStorage.getItem('index')),
+      data: JSON.parse(useStorage.getItem('index')),
       rerender: false,
     });
   }
@@ -35,13 +36,13 @@ router.get('/', async (req, res) => {
 
   if (json.error) {
     return res.render('index.ejs', {
-      data: JSON.parse(localStorage.getItem('index')),
+      data: JSON.parse(useStorage.getItem('index')),
       rerender: false,
     });
   }
 
   if (json) {
-    localStorage.setItem('index', JSON.stringify(data));
+    useStorage.setItem('index', JSON.stringify(data));
     return res.render('index.ejs', {
       data: data,
       rerender: false,
@@ -54,9 +55,9 @@ router.post('/app', async (req, res) => {
   const postvalue = req.body.value;
 
   // If artist has already been searched
-  if (localStorage.getItem(postvalue)) {
+  if (useStorage.getItem(postvalue)) {
     return res.render('index.ejs', {
-      data: JSON.parse(localStorage.getItem(postvalue)),
+      data: JSON.parse(useStorage.getItem(postvalue)),
     });
   }
 
@@ -64,7 +65,7 @@ router.post('/app', async (req, res) => {
 
   if (json.error) {
     return res.render('index.ejs', {
-      data: JSON.parse(localStorage.getItem('index')),
+      data: JSON.parse(useStorage.getItem('index')),
       rerender: false,
     });
   }
@@ -77,7 +78,7 @@ router.post('/app', async (req, res) => {
   const uniqueArray = utils.filterArray(formatStructure);
 
   if (json && !json.error) {
-    localStorage.setItem('index', JSON.stringify(uniqueArray));
+    useStorage.setItem('index', JSON.stringify(uniqueArray));
     return res.render('index.ejs', {
       data: uniqueArray,
       rerender: false,

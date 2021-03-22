@@ -1,22 +1,23 @@
 const express = require('express');
 const router = express.Router();
 const api = require('../../modules/api');
-
+let useStorage = '';
 
 let json;
+
+if (typeof localStorage === 'undefined' || localStorage === null) {
+  const LocalStorage = require('node-localstorage').LocalStorage;
+  useStorage = new LocalStorage('./scratch');
+}
+
 
 router.get('/artist/:name', async (req, res) => {
   const name = req.params.name;
 
-  if (typeof localStorage === 'undefined' || localStorage === null) {
-    const LocalStorage = require('node-localstorage').LocalStorage;
-    localStorage = new LocalStorage('./scratch');
-  }
 
-
-  if (localStorage.getItem(name)) {
+  if (useStorage.getItem(name)) {
     return res.render('carousel.ejs', {
-      data: JSON.parse(localStorage.getItem(name)),
+      data: JSON.parse(useStorage.getItem(name)),
     });
   }
 
@@ -32,7 +33,7 @@ router.get('/artist/:name', async (req, res) => {
   });
 
   if (json) {
-    localStorage.setItem(name, JSON.stringify(dataset));
+    useStorage.setItem(name, JSON.stringify(dataset));
     return res.render('carousel.ejs', {
       data: dataset,
     });

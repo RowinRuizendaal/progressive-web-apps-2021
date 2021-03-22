@@ -1,0 +1,27 @@
+<div class="swiper-container">
+    <div class="swiper-wrapper">
+        <% data.forEach(function(data) { %>
+            <article class="swiper-slide">
+                <div class="player">
+                    <div class="imgBx">
+                        <img src="<%= data.album.cover_medium %>">
+                        <audio controls>
+                                    <source src="<%= data.preview %>" type="audio/mp3">
+                                        <source src="<%= data.preview %>" type="audio/mpeg">
+                                        Your browser does not support the audio element.
+                                </audio>
+                        <div class="text__overlay">
+                            <h3>
+                                <%= data.title%>
+                            </h3>
+                            <p>
+                                <%= data.artist.name%>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </article>
+            <% }) %>
+    </div>
+</div>
+</body>
