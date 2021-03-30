@@ -53,7 +53,7 @@ router.get('/', async (req, res) => {
 
 router.post('/app', async (req, res) => {
   const postvalue = req.body.value;
-
+  console.log(postvalue);
   // If artist has already been searched
   if (useStorage.getItem(postvalue)) {
     return res.render('index.ejs', {
