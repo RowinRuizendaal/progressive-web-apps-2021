@@ -32,21 +32,91 @@ Like feature to save any songs from your favorite artist,
 
 Better API connection with limitless calls
 
+## NPM scripts
 
+```js
+npm run dev : "build": "rollup -c"
+```
 
+```js
+npm run start : "npm run build && node ./dist/index.js"
+```
 
-## Actor diagram 
+```js
+npm run dev: "npm run build && nodemon ./dist/index.js"
+```
 
-![actor](https://raw.githubusercontent.com/RowinRuizendaal/web-app-from-scratch-2021/master/assets/documentation/Actor.png)
+The build script will make a new directory within the project itself called: dist, the dist folder is structured as followed:
 
-## Interaction diagram
+```js
+- Public/
+- scratch/
+- view/
 
-![actor](https://raw.githubusercontent.com/RowinRuizendaal/web-app-from-scratch-2021/master/assets/documentation/Interaction-diagram.png)
+index.js
 
+```
+For this I am using rollup with a rollup.config.js:
 
-## Data transform
+```js
+export default {
+  input: 'index.js',
+  output: {
+    dir: 'dist',
+    format: 'cjs',
+  },
+  plugins: [
+      // Delete the existing dist folder if exist
+    del({
+      targets: 'dist/*',
+    }),
+    copy({
+        // Copy public folder to dist
+      targets: [{
+        src: 'public/*',
+        dest: 'dist/public',
+      },
+      {
+        src: 'view',
+        dest: 'dist',
+      },
+      {
+        src: 'scratch',
+        dest: 'dist',
+      },
+      {
+        // Minify public css with cleanCSS
+        src: 'public/css/*',
+        dest: 'dist/public/css',
+        transform: (contents) => new CleanCSS().minify(contents).styles,
+      },
+      {
+        // Minify javascript file with uglify
+        src: 'public/swiper-interaction.js',
+        dest: 'dist/public',
+        transform: () => uglify.minify(fs.readFileSync(path.join(__dirname, 'public', 'swiper-interaction.js'), 'utf8'), {}).code,
+      },
+      {
+        // Minify javascript file with uglify
+        src: 'public/service-worker.js',
+        dest: 'dist/public',
+        transform: () => uglify.minify(fs.readFileSync(path.join(__dirname, 'public', 'service-worker.js'), 'utf8'), {}).code,
+      },
+      ],
+    }),
+    commonjs(),
+    purgecss({
+      content: ['**/*.html'],
+      css: ['**/*.css'],
+    }),
+  ],
+  // External packages
+  external: ['express', 'path', 'axios', 'ejs'],
+};
+```
 
-[Genre.js](https://github.com/RowinRuizendaal/web-app-from-scratch-2021/blob/master/js/modules/genre/genre.js#L48-L49)
+Then the script will execute the index.js file within the dist folder
+
 
 ```js
 import { formatData } from '../utils/formatData.js'
