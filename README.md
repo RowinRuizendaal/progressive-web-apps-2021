@@ -118,6 +118,26 @@ export default {
 Then the script will execute the index.js file within the dist folder
 
 
+## Caching strategy
+
+This project can also work offline with the help of a service worker which is based on a caching strategy:
+
+Service worker
+
+Every reponse (HTML, CSS & javascript) will be cached within the bufferstorage from the browser itself, the files that are being cached are:
+
+```js
+const urlsToCache = [
+  '/offline',
+  '/css/style.css',
+  '/css/swiper-bundle.css',
+  '/swiper.js',
+  '/swiper-interaction.js',
+];
+```
+
+![offline](https://raw.githubusercontent.com/RowinRuizendaal/progressive-web-apps-2021/master/docs/img/offline.png)
+
 ```js
 import { formatData } from '../utils/formatData.js'
 import { filterArray } from '../utils/FilterArray.js'
