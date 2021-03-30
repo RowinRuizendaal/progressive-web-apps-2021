@@ -136,7 +136,9 @@ const urlsToCache = [
 ];
 ```
 
-![offline](https://raw.githubusercontent.com/RowinRuizendaal/progressive-web-apps-2021/master/docs/img/offline.png)
+![offline](https://github.com/RowinRuizendaal/progressive-web-apps-2021/blob/master/docs/images/offline.png?raw=true)
+
+When the user is offline, and the fetched page does not exist in the bufferstorage
 
 ```js
 import { formatData } from '../utils/formatData.js'
