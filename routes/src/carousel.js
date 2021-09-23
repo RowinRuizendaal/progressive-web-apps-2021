@@ -28,7 +28,7 @@ router.get('/artist/:name', async (req, res) => {
     return res.redirect('/');
   }
 
-  dataset = json.data.map((el) => {
+  let dataset = json.data.map((el) => {
     return el;
   });
 
